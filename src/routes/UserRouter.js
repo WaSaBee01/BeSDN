@@ -15,5 +15,9 @@ router.get("/getAll", authMiddleware, userController.getAllUser);
 router.get("/get-details/:id", userController.getDetailsUser);
 router.post("/refresh-token", userController.refreshToken);
 router.post("/delete-many", authMiddleware, userController.deleteMany);
+router.post("/add-favorite", userController.addFavorite);
+router.post("/remove-favorite", userController.removeFavorite);
+router.get("/favorites/:userId", userController.getFavorites);
+
 
 module.exports = router;

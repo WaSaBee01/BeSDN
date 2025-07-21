@@ -1,5 +1,7 @@
 const User = require('../models/UserModel');
 const Order = require('../models/OrderProduct');
+const Product = require('../models/ProductModal');
+
 const bcrypt = require("bcrypt");
 const { genneralAccessToken, genneralRefreshToken } = require('./jwtService');
 
@@ -196,7 +198,50 @@ const getDetailsUser = (id) => {
         }
     });
 }
+const addFavorite = (userId, productId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // Kiểm tra tồn tại user & product
+            const user = await User.findById(userId);
+            if (!user) return resolve({ status: 'ERR', message: 'User not found' });
 
+            const product = await Product.findById(productId);
+            if (!product) return resolve({ status: 'ERR', message: 'Product not found' });
+
+            // Dùng $addToSet để tránh trùng
+            await User.findByIdAndUpdate(userId, { $addToSet: { favorites: productId } });
+
+            resolve({ status: 'OK', message: 'Added to favorites' });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+const removeFavorite = (userId, productId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await User.findByIdAndUpdate(userId, { $pull: { favorites: productId } });
+            resolve({ status: 'OK', message: 'Removed from favorites' });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+const getFavorites = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // Lấy thông tin sản phẩm luôn (populate)
+            const user = await User.findById(userId).populate('favorites');
+            if (!user) return resolve({ status: 'ERR', message: 'User not found' });
+
+            resolve({ status: 'OK', message: 'Success', data: user.favorites });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
 
 
 
@@ -207,5 +252,8 @@ module.exports = {
     deleteUser,
     getAllUser,
     getDetailsUser,
-    deleteManyUser
+    deleteManyUser,
+    addFavorite,
+    removeFavorite,
+    getFavorites
 }

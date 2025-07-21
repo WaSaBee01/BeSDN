@@ -180,6 +180,45 @@ const logoutUser = async (req, res) => {
         })
     }
 }
+const addFavorite = async (req, res) => {
+    try {
+        const { userId, productId } = req.body;
+        if (!userId || !productId) {
+            return res.status(200).json({ status: 'ERR', message: 'Missing params' });
+        }
+        const response = await UserService.addFavorite(userId, productId);
+        return res.status(200).json(response);
+    } catch (e) {
+        res.status(500).json({ message: e });
+    }
+};
+
+const removeFavorite = async (req, res) => {
+    try {
+        const { userId, productId } = req.body;
+        if (!userId || !productId) {
+            return res.status(200).json({ status: 'ERR', message: 'Missing params' });
+        }
+        const response = await UserService.removeFavorite(userId, productId);
+        return res.status(200).json(response);
+    } catch (e) {
+        res.status(500).json({ message: e });
+    }
+};
+
+const getFavorites = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        if (!userId) {
+            return res.status(200).json({ status: 'ERR', message: 'User ID is required' });
+        }
+        const response = await UserService.getFavorites(userId);
+        return res.status(200).json(response);
+    } catch (e) {
+        res.status(500).json({ message: e });
+    }
+};
+
 
 
 
@@ -192,5 +231,8 @@ module.exports = {
     getDetailsUser,
     refreshToken,
     logoutUser,
-    deleteMany
+    deleteMany,
+    addFavorite,
+    removeFavorite,
+    getFavorites
 }

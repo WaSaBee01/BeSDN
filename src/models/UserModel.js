@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
         address: { type: String },
         avatar: { type: String },
         city: { type: String },
+        favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }]
     },
     {
         timestamps: true,
