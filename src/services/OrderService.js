@@ -83,6 +83,7 @@ const createOrder = (newOrder) => {
           resolve({
             status: "OK",
             message: "Order created successfully",
+            order: createdOrder,
           });
         }
       }
