@@ -1,5 +1,4 @@
 const bcrypt = require("bcrypt");
-const { genneralAccessToken, genneralRefreshToken } = require("./jwtService");
 const Order = require("../models/OrderProduct");
 const Product = require("../models/ProductModal");
 const EmailService = require("../services/EmailService");
